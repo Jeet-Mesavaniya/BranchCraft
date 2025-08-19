@@ -1,54 +1,111 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-branch-name-tool',
   standalone: true,
-  imports: [FormsModule, NgIf],
+  imports: [FormsModule],
   templateUrl: './branch-name-tool.component.html',
-  styleUrls: ['./branch-name-tool.component.css']
+  styleUrl: './branch-name-tool.component.css'
 })
-export class BranchNameToolComponent {
-  // Defaults that most users will keep
-  team = 'FX_PC';
-  pi = 'PI2025Q3';
-  sprint = '1';
+export class BranchNameToolComponent implements OnInit {
+  team: string = 'PE';
+  pi: string = 'PI2025Q3';
+  sprint: string = '3';
+  workItemText: string = '';
+  branchName: string = '';
+  copyMessage: string = '';
+  wasTruncated: boolean = false;
+  invalidInput: boolean = false;
+  history: string[] = [];
 
-  // Required by the user
-  workItemText = '';
+  readonly maxLength = 80;
 
-  branchName = '';
-  copyMessage = '';
-
+  ngOnInit() {
+    if (typeof window !== 'undefined') {
+      const savedTeam = localStorage.getItem('team');
+      const savedPi = localStorage.getItem('pi');
+      const savedSprint = localStorage.getItem('sprint');
+  
+      this.team = savedTeam ?? this.team;    // Use saved value if exists, otherwise default
+      this.pi = savedPi ?? this.pi;
+      this.sprint = savedSprint ?? this.sprint;
+  
+      const savedHistory = localStorage.getItem('branchHistory');
+      if (savedHistory) {
+        this.history = JSON.parse(savedHistory);
+      }
+    }
+  }
+  
   generateBranch() {
-    // if user cleared any defaults, block generation
-    if (!this.team.trim() || !this.pi.trim() || !this.sprint.trim() || !this.workItemText.trim()) {
+    this.wasTruncated = false;
+    this.invalidInput = false;
+  
+    // ✅ Validate required fields
+    if (!this.team || !this.pi || !this.sprint || !this.workItemText.trim()) {
+      this.invalidInput = true;
       this.branchName = '';
       return;
     }
 
-    // Extract ID and title from "Bug 1315475: Some text ..."
-    const match = this.workItemText.match(/(\d+):\s*(.*)/);
-    const id = match ? match[1] : '';
-    const title = match ? match[2] : this.workItemText;
+    // ✅ Only save to localStorage if window exists
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('team', this.team);
+      localStorage.setItem('pi', this.pi);
+      localStorage.setItem('sprint', this.sprint);
+    }
 
-    const cleanTitle = title
+    const regex = /(Bug|Req|CR)\s*(\d+):?\s*(.*)/i;
+    const match = this.workItemText.match(regex);
+
+    let id = 'xxxx';
+    let title = this.workItemText;
+
+    if (match) {
+      id = match[2];
+      title = match[3];
+    }
+
+    let cleanTitle = title
       .replace(/[^a-zA-Z0-9 ]/g, ' ')
-      .split(' ')
-      .filter(w => w.length > 0)
-      .slice(0, 7)
-      .map(w => w.charAt(0).toUpperCase() + w.slice(1))
-      .join('_');
+      .trim()
+      .replace(/\s+/g, '_') .toLowerCase(); 
 
-    this.branchName = `${this.team}_${this.pi}_${this.sprint}_${id}_${cleanTitle}`;
-    this.copyMessage = ''; // reset inline toast
+      let fullName = `${this.team.toUpperCase()}_${this.pi.toUpperCase()}_${this.sprint}_${id}_${cleanTitle}`;
+
+    if (fullName.length > this.maxLength) {
+      const allowedTitleLength =
+        this.maxLength -
+        (this.team.length + this.pi.length + this.sprint.length + id.length + 5);
+
+      let truncated = cleanTitle.substring(0, allowedTitleLength);
+
+      if (truncated.includes('_')) {
+        truncated = truncated.substring(0, truncated.lastIndexOf('_'));
+      }
+
+      truncated = truncated.replace(/_+$/, '');
+      fullName = `${this.team.toUpperCase()}_${this.pi.toUpperCase()}_${this.sprint}_${id}_${truncated}`;
+      this.wasTruncated = true;
+    }
+
+    this.branchName = fullName.replace(/_+/g, '_');
+
+    // ✅ Only save history if window exists
+    if (typeof window !== 'undefined') {
+      this.history.unshift(this.branchName);
+      this.history = this.history.slice(0, 5);
+      localStorage.setItem('branchHistory', JSON.stringify(this.history));
+    }
   }
 
-  copy(text: string) {
-    navigator.clipboard.writeText(text).then(() => {
-      this.copyMessage = `✅ Copied${text.length > 40 ? ': ' + text.slice(0, 40) + '...' : ''}`;
-      setTimeout(() => (this.copyMessage = ''), 3000);
-    });
+  copy(text: string, msg: string) {
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(() => {
+        this.copyMessage = msg;
+        setTimeout(() => (this.copyMessage = ''), 2000);
+      });
+    }
   }
 }
