@@ -1,0 +1,153 @@
+/* Full page dark background */
+:host {
+    display: block;
+    min-height: 100vh;
+    background: #1e1e1e;
+    color: #e0e0e0;
+    padding: 40px 20px;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+  }
+  
+  /* Card container */
+  .tool-container {
+    max-width: 700px;
+    margin: auto;
+    padding: 30px;
+    border-radius: 14px;
+    background: #2b2b2b;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    border: 1px solid #444;
+  }
+  
+  /* Title */
+  h2 {
+    text-align: center;
+    font-size: 24px;
+    color: #90caf9;
+    margin-bottom: 25px;
+    letter-spacing: 1px;
+  }
+  
+  /* Form groups */
+  .form-group {
+    margin-bottom: 18px;
+  }
+  
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #bbb;
+  }
+  
+  /* Inputs */
+  input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #555;
+    background: #1a1a1a;
+    color: #eee;
+    font-size: 14px;
+    box-sizing: border-box;
+    outline: none;
+    transition: border 0.2s, box-shadow 0.2s;
+  }
+  
+  input:focus, select:focus, textarea:focus {
+    border-color: #90caf9;
+    box-shadow: 0 0 8px #42a5f5;
+  }
+  
+  textarea {
+    resize: vertical;
+  }
+  
+  /* Buttons */
+  .generate-btn {
+    width: 100%;
+    padding: 14px;
+    margin-top: 10px;
+    font-size: 16px;
+    background: linear-gradient(45deg, #42a5f5, #1976d2);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.3s;
+  }
+  
+  .generate-btn:hover {
+    transform: scale(1.02);
+    background: linear-gradient(45deg, #64b5f6, #1565c0);
+  }
+  
+  /* Result box */
+  .result-box {
+    margin-top: 25px;
+    padding: 20px;
+    border-radius: 10px;
+    background: #1a1a1a;
+    border: 1px solid #555;
+    animation: fadeIn 0.4s ease;
+  }
+  
+  .result-box p {
+    margin: 0;
+    font-size: 16px;
+    color: #b3e5fc;
+    word-break: break-word;
+  }
+  
+  .result-box span {
+    color: #fff;
+    font-family: monospace;
+  }
+  
+  /* Copy buttons */
+  .btn-row {
+    margin-top: 15px;
+  }
+  
+  .copy-btn {
+    padding: 10px 16px;
+    background: #388e3c;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.3s;
+  }
+  
+  .copy-btn:hover {
+    transform: scale(1.05);
+    background: #43a047;
+  }
+  
+  .git-btn {
+    background: #ff7043;
+  }
+  
+  .git-btn:hover {
+    background: #f4511e;
+  }
+  
+  /* Fade in animation */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .error-text {
+    color: #ff6b6b;
+    font-size: 13px;
+    margin-top: 5px;
+  }
+  
+  .copy-success {
+    margin-top: 10px;
+    color: #4caf50;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  

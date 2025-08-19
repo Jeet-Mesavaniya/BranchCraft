@@ -1,0 +1,56 @@
+<div class="tool-container">
+  <form #branchForm="ngForm" (ngSubmit)="generateBranch()">
+    <!-- Team -->
+    <div class="form-group">
+      <label>Team</label>
+      <input [(ngModel)]="team" name="team" #teamCtrl="ngModel" required />
+      <div class="error-text" *ngIf="teamCtrl.invalid && teamCtrl.touched">Team is required.</div>
+    </div>
+
+    <!-- PI -->
+    <div class="form-group">
+      <label>PI</label>
+      <input [(ngModel)]="pi" name="pi" #piCtrl="ngModel" required />
+      <div class="error-text" *ngIf="piCtrl.invalid && piCtrl.touched">PI is required.</div>
+    </div>
+
+    <!-- Sprint -->
+    <div class="form-group">
+      <label>Sprint</label>
+      <select [(ngModel)]="sprint" name="sprint" #sprintCtrl="ngModel" required>
+        <option value="">-- Select Sprint --</option>
+        <option value="1">Sprint 1</option>
+        <option value="2">Sprint 2</option>
+        <option value="3">Sprint 3</option>
+      </select>
+      <div class="error-text" *ngIf="sprintCtrl.invalid && sprintCtrl.touched">Sprint is required.</div>
+    </div>
+
+    <!-- Work Item -->
+    <div class="form-group">
+      <label>Work Item</label>
+      <textarea
+        [(ngModel)]="workItemText"
+        name="workItemText"
+        #workCtrl="ngModel"
+        required
+        rows="3"
+        placeholder="Paste like: Bug 1312345 : Unnecessary Pop-up Displayed ..."
+      ></textarea>
+      <div class="error-text" *ngIf="workCtrl.invalid && workCtrl.touched">Work Item is required.</div>
+    </div>
+
+    <!-- Generate -->
+    <button class="generate-btn" type="submit" [disabled]="branchForm.invalid">🚀 Generate Branch</button>
+  </form>
+
+  <!-- Result -->
+  <div *ngIf="branchName" class="result-box">
+    <p><b>Branch:</b> <span>{{ branchName }}</span></p>
+    <div class="btn-row">
+      <button class="copy-btn" (click)="copy(branchName)">📋 Copy Branch</button>
+      <button class="copy-btn git-btn" (click)="copy('git checkout -b ' + branchName)">🛠 Copy Git Command</button>
+    </div>
+    <p class="copy-success" *ngIf="copyMessage">{{ copyMessage }}</p>
+  </div>
+</div>
