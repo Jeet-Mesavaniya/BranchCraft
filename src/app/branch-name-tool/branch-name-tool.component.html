@@ -46,7 +46,7 @@
 
   <!-- Result -->
   <div *ngIf="branchName" class="result-box">
-    <p><b>Branch:</b> <span>{{ branchName }}</span></p>
+    <p><b>Branch: </b> <span>{{ branchName }}</span></p>
     <div class="btn-row">
       <button class="copy-btn" (click)="copy(branchName)">📋 Copy Branch</button>
       <button class="copy-btn git-btn" (click)="copy('git checkout -b ' + branchName)">🛠 Copy Git Command</button>
