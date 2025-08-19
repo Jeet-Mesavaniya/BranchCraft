@@ -1,2 +1,0 @@
-export default `html,body{margin:0;padding:0;height:100%;background:#1e1e1e;color:#e0e0e0;font-family:Segoe UI,Roboto,sans-serif}app-root{display:block;min-height:100vh}
-`;
