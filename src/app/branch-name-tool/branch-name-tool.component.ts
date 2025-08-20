@@ -59,23 +59,24 @@ export class BranchNameToolComponent implements OnInit {
       localStorage.setItem('sprint', this.sprint);
     }
   
-    const regex = /(Bug|Req|CR)\s*(\d+):?\s*(.*)/i;
+    const regex = /(?:Bug|Requirement|Change Request)\s*(\d+):?\s*(.*)/i;
     const match = this.workItemText.match(regex);
   
     let id = '';
     let title = this.workItemText;
   
     if (match) {
-      id = match[2];       // Only set ID if present
-      title = match[3];    // Rest of text is title
+      id = match[1];       // Only set ID if present
+      title = match[2];    // Rest of text is title
     }
   
     // ✅ Clean and lowercase only the title part
     let cleanTitle = title
-      .replace(/[^a-zA-Z0-9 ]/g, ' ')
-      .trim()
-      .replace(/\s+/g, '_')
-      .toLowerCase();
+                    .replace(/[^a-zA-Z0-9 ]/g, ' ')
+                    .trim()
+                    .replace(/\s+/g, '_')
+                    .toLowerCase();
+
   
     // ✅ Build branch name without _xxxx_
     let fullName = `${this.team.toUpperCase()}_${this.pi.toUpperCase()}_${this.sprint}`;
@@ -83,6 +84,7 @@ export class BranchNameToolComponent implements OnInit {
       fullName += `_${id}`;
     }
     fullName += `_${cleanTitle}`;
+
   
     // ✅ Truncate if exceeds maxLength
     if (fullName.length > this.maxLength) {
