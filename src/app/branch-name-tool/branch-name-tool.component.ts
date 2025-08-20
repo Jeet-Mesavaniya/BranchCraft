@@ -9,7 +9,7 @@ import { FormsModule, NgForm } from '@angular/forms';
   styleUrl: './branch-name-tool.component.css'
 })
 export class BranchNameToolComponent implements OnInit {
-  team: string = 'PE';
+  team: string = 'FX_PC';
   pi: string = 'PI2025Q3';
   sprint: string = '3';
   workItemText: string = '';
